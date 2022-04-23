@@ -5,7 +5,7 @@ Official repository for the following courses:
 - X247: Entrepreneurship
 - M246: Hands-On, Applied Machine Learning
 
-### M246: Hands-On, Applied Machine Learning 
+### M246: Hands-On, Applied Machine Learning
 
 #### Activities:
 
@@ -16,9 +16,21 @@ Official repository for the following courses:
 #### Postgres Server Details
 
 host: 104.225.218.162
+
+<br />
+
 user: postgres
+
+<br />
+
 password: UCLASplash2022!
+
+<br />
+
 db: gender_prediction
+
+<br />
+
 port: 8201   
 
 ### X247: Entrepreneurship
