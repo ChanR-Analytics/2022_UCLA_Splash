@@ -5,7 +5,7 @@ Official repository for the following courses:
 - X247: Entrepreneurship
 - M246: Hands-On, Applied Machine Learning
 
-### M246
+### M246: Hands-On, Applied Machine Learning 
 
 #### Activities:
 
@@ -21,6 +21,6 @@ password: UCLASplash2022!
 db: gender_prediction
 port: 8201   
 
-### X247
+### X247: Entrepreneurship
 
-- [Slides Link]()
+- [Slides Link](https://slides.com/rchatterjee/technical-entrepreneurship-in-2020)
