@@ -14,7 +14,6 @@ class GenderClassifier:
         # Read DataFrame from SQL Query
         self.name_df = pd.read_csv(path)
 
-
     def group_by_name_gender(self):
         # Create a pandas groupby object by name and gender
         self.namechart = self.name_df.groupby(

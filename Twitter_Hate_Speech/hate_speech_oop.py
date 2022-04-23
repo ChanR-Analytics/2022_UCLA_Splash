@@ -8,6 +8,11 @@ import nltk
 from nltk.stem.porter import *
 from os import getcwd, listdir
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.model_selection import train_test_split
+from sklearn.feature_selection import SelectFromModel, RFE
+from sklearn.svm import LinearSVC
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer as VS
 from textstat.textstat import *
 warnings.simplefilter(action='ignore', category=FutureWarning)
