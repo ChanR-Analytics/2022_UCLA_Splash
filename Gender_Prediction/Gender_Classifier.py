@@ -10,10 +10,9 @@ from sklearn.naive_bayes import MultinomialNB
 
 class GenderClassifier:
 
-    def __init__(self, con):
+    def __init__(self, path):
         # Read DataFrame from SQL Query
-        self.name_df = pd.read_sql(
-            'SELECT * FROM NationalNames', con=con, dtype={'Count': np.int32})
+        self.name_df = pd.read_csv(path)
 
     def group_by_name_gender(self):
         # Create a pandas groupby object by name and gender
