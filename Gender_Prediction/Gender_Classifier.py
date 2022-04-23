@@ -60,22 +60,22 @@ class GenderClassifier:
             range(self.namechart_diff.shape[0]), train_size=0.7)
 
         # Create masking
-        mask = np.ones(self.namechart_diff.shape[0], dtype='int')
+        self.mask = np.ones(self.namechart_diff.shape[0], dtype='int')
 
         # Assign train to 1 and test to 0
-        mask[itrain], mask[itest] = 1, 0
+        self.mask[itrain], self.mask[itest] = 1, 0
 
         # Re-assign mask to locations where mask is 1 returns True
-        mask = (mask == 1)
+        self.mask = (self.mask == 1)
 
     def train_model(self, X, y):
         # Getting actual bigrams for train set
-        Xtrainthis = X[mask]
-        Ytrainthis = y[mask]
+        Xtrainthis = X[self.mask]
+        Ytrainthis = y[self.mask]
 
         # Getting actual bigrams for test set
-        Xtestthis = X[~mask]
-        Ytestthis = y[~mask]
+        Xtestthis = X[~self.mask]
+        Ytestthis = y[~self.mask]
 
         # Instantiate Naive Baye's Classifier using Multinomial Distribution
         clf = MultinomialNB(alpha=1)
