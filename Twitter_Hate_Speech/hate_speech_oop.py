@@ -217,3 +217,91 @@ class HatebaseTwitter():
         self.feature_names = variables + pos_variables + other_feature_names
 
         return M
+
+    def l1_dim_reduce(self, M):
+        df = self.df
+        y = df['class']
+        X = pd.DataFrame(M)
+        dim_reduce = SelectFromModel(LogisticRegression(solver='liblinear', class_weight='balanced', C=0.04, penalty='l1'))
+        X_ = dim_reduce.fit_transform(X, y)
+        return X_
+
+    def rfe_dim_reduce(self, M, classifier, n):
+        df = self.df
+        y = df['class']
+        X = pd.DataFrame(M)
+        if classifier == 'lr':
+            model = LogisticRegression()
+        elif classifier == 'rf':
+            model = RandomForestClassifier()
+        elif classifier == 'ada':
+            model = AdaBoostClassifier()
+        elif classifier == 'xgb':
+            model = XGBClassifier()
+        elif classifier == 'svc':
+            model = LinearSVC()
+        elif classifier == 'davidson':
+            model = LogisticRegression(solver='liblinear', class_weight='balanced', C=0.04, penalty='l1')
+        else:
+            raise TypeError("Please use a proper classifier.")
+        dim_reduce = RFE(model, step=n)
+        X_ = dim_reduce.fit_transform(X, y)
+        return X_
+
+    def classify(self, X, type: str, classifier: str, test_prop: float, res: None, res_method: None):
+
+        if type == 'binary':
+            y = self.df['class'].replace(0,1)
+        elif type == 'multi':
+            y = self.df['class']
+        else:
+            raise TypeError("Choose a proper type of classification")
+
+        X_train, X_test, Y_train, Y_test = train_test_split(X, y, test_size=test_prop, stratify=y)
+
+        if res == True:
+            if res_method == 'down':
+                nm = NearMiss()
+                X_res, Y_res = nm.fit_resample(X_train, Y_train)
+            elif res_method == 'up':
+                sm = ADASYN()
+                X_res, Y_res = sm.fit_resample(X_train, Y_train)
+            else:
+                raise TypeError("Resampling method not provided. Please use 'up' for oversampling or 'down' for undersampling.")
+
+        if classifier == 'lr':
+            model = LogisticRegression(solver='liblinear', class_weight='balanced', C=0.04, penalty='l2')
+        elif classifier == 'svc':
+            model = LinearSVC(C=0.004, penalty='l2')
+        elif classifier == 'rf':
+            n_est = int(input("Type in number of trees to estimate from: ").strip())
+            model = RandomForestClassifier(n_estimators=n_est, bootstrap=True, max_depth=5)
+        elif classifier == 'xgb':
+            n_est = int(input("Type in number of trees to estimate from: ").strip())
+            model = XGBClassifier(n_estimators=n_est, bootstrap=True, max_depth=5, reg_lamba=0.4)
+        elif classifier == 'ada':
+            n_est = int(input("Type in number of trees to estimate from: ").strip())
+            model = AdaBoostClassifier(n_estimators=n_est, learning_rate=0.005)
+        else:
+            raise TypeError("Choose a proper classifier. Possible inputs: 'lr', 'svc', 'rf', 'xgb', 'ada' .")
+
+        if res == True:
+            model.fit(X_res, Y_res)
+        else:
+            model.fit(X_train, Y_train)
+
+        Y_pred = model.predict(X_test)
+
+        # Accuracy Percentage
+        print(f"Accuracy is {round(accuracy_score(Y_test, Y_pred), 2)*100}%")
+
+        # Classification Report
+        print(classification_report(Y_pred, Y_test))
+
+        # Matthew's Correlation Coefficient
+        print(f"Matthew's Correlation Coefficient is {matthews_corrcoef(Y_test, Y_pred)}")
+
+        # Plots of Confusion Matrix and ROC Curve
+        plot_confusion_matrix(Y_test, Y_pred, figsize=(10,10))
+
+        return model
